@@ -1,6 +1,3 @@
-import vctoolkit as vc
-
-
 class MANOHand:
   n_keypoints = 21
 
@@ -35,6 +32,16 @@ class MANOHand:
 
   end_points = [0, 16, 17, 18, 19, 20]
 
-  
+import torch
+import vctoolkit as vc
+import numpy as np
 
-vc.joints_to_mesh(xyz, MANOHand.parents, save_path='joints.obj')
+# j_rot = torch.load('joints_rotated_list.pt')
+# rot_j = torch.stack(j_rot).reshape(-1,3).detach().cpu().numpy()
+initj = torch.load('initJ.pt').reshape(-1,3)
+valid = np.ones(21, np.bool)
+valid[16:] = 0 # 意思是忽略指尖的5个点，如果有21个joint要去掉这一行
+
+
+# vc.joints_to_mesh(rot_j, MANOHand(), save_path='rot_j.obj', valid=valid)
+vc.joints_to_mesh(initj, MANOHand(), save_path='initJ.obj', valid=valid)
